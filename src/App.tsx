@@ -279,17 +279,6 @@ function App() {
                 <span>{t('home')}</span>
               </button>
               <button
-                onClick={() => setCurrentView('home')}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  currentView === 'home'
-                    ? 'text-pink-600 bg-pink-50'
-                    : 'text-gray-700 hover:text-pink-600 hover:bg-pink-50'
-                }`}
-              >
-                <Home size={16} />
-                <span>Home</span>
-              </button>
-              <button
                 onClick={() => setCurrentView('cart')}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors relative ${
                   currentView === 'cart'
