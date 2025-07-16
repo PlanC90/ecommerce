@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingCart, User, Search, Menu, X, Package, Settings, Home, Plus, Edit, Trash2, Wallet, Calendar, Truck } from 'lucide-react';
+import { ShoppingCart, User, Search, Menu, X, Package, Settings, Home, Plus, Edit, Trash2, Wallet, Calendar, Truck, Globe } from 'lucide-react';
 import ProductCard from './components/ProductCard';
 import Cart from './components/Cart';
 import AdminPanel from './components/AdminPanel';
@@ -9,11 +9,14 @@ import CheckoutForm from './components/CheckoutForm';
 import AdminLogin from './components/AdminLogin';
 import OrderManagement from './components/OrderManagement';
 import AdminSettings from './components/AdminSettings';
-import { Product, CartItem, Order, ShippingAddress, AdminSettings as AdminSettingsType } from './types';
+import LanguageSelector from './components/LanguageSelector';
+import { Product, CartItem, Order, ShippingAddress, AdminSettings as AdminSettingsType, Language } from './types';
+import { translations } from './utils/translations';
 
 function App() {
   const [currentView, setCurrentView] = useState<'home' | 'cart' | 'checkout' | 'admin'>('home');
   const [adminView, setAdminView] = useState<'products' | 'orders' | 'settings'>('products');
+  const [language, setLanguage] = useState<Language>('tr');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -24,6 +27,8 @@ function App() {
     shippingCost: 25,
     freeShippingThreshold: 500
   });
+  
+  const t = (key: string) => translations[key]?.[language] || key;
   
   const [products, setProducts] = useState<Product[]>([
     {
@@ -137,10 +142,10 @@ function App() {
   }, []);
 
   const categories = [
-    { id: 'all', name: 'All Products' },
-    { id: 'skincare', name: 'Skincare' },
-    { id: 'makeup', name: 'Makeup' },
-    { id: 'fragrance', name: 'Fragrance' }
+    { id: 'all', name: t('allProducts') },
+    { id: 'skincare', name: t('skincare') },
+    { id: 'makeup', name: t('makeup') },
+    { id: 'fragrance', name: t('fragrance') }
   ];
 
   const filteredProducts = products.filter(product => {
@@ -271,6 +276,17 @@ function App() {
                 }`}
               >
                 <Home size={16} />
+                <span>{t('home')}</span>
+              </button>
+              <button
+                onClick={() => setCurrentView('home')}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  currentView === 'home'
+                    ? 'text-pink-600 bg-pink-50'
+                    : 'text-gray-700 hover:text-pink-600 hover:bg-pink-50'
+                }`}
+              >
+                <Home size={16} />
                 <span>Home</span>
               </button>
               <button
@@ -282,7 +298,7 @@ function App() {
                 }`}
               >
                 <ShoppingCart size={16} />
-                <span>Cart</span>
+                <span>{t('cart')}</span>
                 {cartItemsCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-pink-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                     {cartItemsCount}
@@ -301,12 +317,16 @@ function App() {
                 }`}
               >
                 <Settings size={16} />
-                <span>Admin</span>
+                <span>{t('admin')}</span>
               </button>
             </nav>
 
-            {/* Wallet Connection */}
-            <div className="hidden md:block">
+            {/* Right Side - Language & Wallet */}
+            <div className="hidden md:flex items-center space-x-4">
+              <LanguageSelector 
+                currentLanguage={language}
+                onLanguageChange={setLanguage}
+              />
               <WalletConnection 
                 isConnected={isWalletConnected}
                 walletAddress={walletAddress}
@@ -341,7 +361,7 @@ function App() {
                 }`}
               >
                 <Home size={16} />
-                <span>Home</span>
+                <span>{t('home')}</span>
               </button>
               <button
                 onClick={() => {
@@ -355,7 +375,7 @@ function App() {
                 }`}
               >
                 <ShoppingCart size={16} />
-                <span>Cart</span>
+                <span>{t('cart')}</span>
                 {cartItemsCount > 0 && (
                   <span className="bg-pink-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                     {cartItemsCount}
@@ -375,9 +395,13 @@ function App() {
                 }`}
               >
                 <Settings size={16} />
-                <span>Admin</span>
+                <span>{t('admin')}</span>
               </button>
-              <div className="px-3 py-2">
+              <div className="px-3 py-2 space-y-2">
+                <LanguageSelector 
+                  currentLanguage={language}
+                  onLanguageChange={setLanguage}
+                />
                 <WalletConnection 
                   isConnected={isWalletConnected}
                   walletAddress={walletAddress}
@@ -396,7 +420,7 @@ function App() {
           <div>
             {/* Hero Banner */}
             <div className="-mx-4 sm:-mx-6 lg:-mx-8 mb-12">
-              <HeroBanner />
+              <HeroBanner language={language} />
             </div>
 
             {/* Search and Filter */}
@@ -405,7 +429,7 @@ function App() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder={t('searchProducts')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
@@ -442,7 +466,7 @@ function App() {
             {filteredProducts.length === 0 && (
               <div className="text-center py-12">
                 <Package className="mx-auto text-gray-400 mb-4" size={48} />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">{t('noProductsFound')}</h3>
                 <p className="text-gray-600">Try adjusting your search or filter criteria</p>
               </div>
             )}
@@ -452,6 +476,7 @@ function App() {
         {currentView === 'cart' && (
           <Cart
             items={cartItems}
+            language={language}
             onUpdateQuantity={updateQuantity}
             onRemoveItem={removeFromCart}
             total={cartTotal}
@@ -465,6 +490,7 @@ function App() {
         {currentView === 'checkout' && (
           <CheckoutForm
             items={cartItems}
+            language={language}
             subtotal={cartTotal}
             adminSettings={adminSettings}
             onPlaceOrder={handlePlaceOrder}
@@ -486,7 +512,7 @@ function App() {
                   }`}
                 >
                   <Package size={16} />
-                  <span>Products</span>
+                  <span>{t('products')}</span>
                 </button>
                 <button
                   onClick={() => setAdminView('orders')}
@@ -497,7 +523,7 @@ function App() {
                   }`}
                 >
                   <Calendar size={16} />
-                  <span>Orders</span>
+                  <span>{t('orders')}</span>
                 </button>
                 <button
                   onClick={() => setAdminView('settings')}
@@ -508,7 +534,7 @@ function App() {
                   }`}
                 >
                   <Settings size={16} />
-                  <span>Settings</span>
+                  <span>{t('settings')}</span>
                 </button>
               </div>
             </div>
@@ -517,6 +543,7 @@ function App() {
             {adminView === 'products' && (
               <AdminPanel
                 products={products}
+                language={language}
                 onAddProduct={addProduct}
                 onUpdateProduct={updateProduct}
                 onDeleteProduct={deleteProduct}
@@ -526,6 +553,7 @@ function App() {
             {adminView === 'orders' && (
               <OrderManagement
                 orders={orders}
+                language={language}
                 onUpdateOrderStatus={updateOrderStatus}
               />
             )}
@@ -533,6 +561,7 @@ function App() {
             {adminView === 'settings' && (
               <AdminSettings
                 settings={adminSettings}
+                language={language}
                 onUpdateSettings={setAdminSettings}
               />
             )}

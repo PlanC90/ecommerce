@@ -45,3 +45,12 @@ export interface AdminSettings {
   shippingCost: number;
   freeShippingThreshold: number;
 }
+
+export type Language = 'tr' | 'en';
+
+export interface Translations {
+  [key: string]: {
+    tr: string;
+    en: string;
+  };
+}
