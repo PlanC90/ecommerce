@@ -47,6 +47,7 @@ export interface AdminSettings {
 }
 
 export type Language = 'tr' | 'en';
+export type View = 'home' | 'cart' | 'checkout' | 'admin' | 'product';
 
 export interface Translations {
   [key: string]: {

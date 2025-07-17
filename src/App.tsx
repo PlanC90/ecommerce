@@ -10,17 +10,19 @@ import AdminLogin from './components/AdminLogin';
 import OrderManagement from './components/OrderManagement';
 import AdminSettings from './components/AdminSettings';
 import LanguageSelector from './components/LanguageSelector';
+import ProductDetail from './components/ProductDetail';
 import { Product, CartItem, Order, ShippingAddress, AdminSettings as AdminSettingsType, Language } from './types';
 import { translations } from './utils/translations';
 
 function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'cart' | 'checkout' | 'admin'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'cart' | 'checkout' | 'admin' | 'product'>('home');
   const [adminView, setAdminView] = useState<'products' | 'orders' | 'settings'>('products');
   const [language, setLanguage] = useState<Language>('tr');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
   const [adminSettings, setAdminSettings] = useState<AdminSettingsType>({
@@ -84,6 +86,96 @@ function App() {
       category: 'skincare',
       description: 'Brightening face mask with vitamin C and natural extracts.',
       stock: 40
+    },
+    {
+      id: 7,
+      name: 'Rose Gold Highlighter',
+      price: 65,
+      image: 'https://images.pexels.com/photos/2533266/pexels-photo-2533266.jpeg?auto=compress&cs=tinysrgb&w=400',
+      category: 'makeup',
+      description: 'Luminous rose gold highlighter for a radiant glow.',
+      stock: 35
+    },
+    {
+      id: 8,
+      name: 'Collagen Eye Cream',
+      price: 180,
+      image: 'https://images.pexels.com/photos/3373745/pexels-photo-3373745.jpeg?auto=compress&cs=tinysrgb&w=400',
+      category: 'skincare',
+      description: 'Anti-aging eye cream with marine collagen and peptides.',
+      stock: 22
+    },
+    {
+      id: 9,
+      name: 'Vanilla Orchid Perfume',
+      price: 280,
+      image: 'https://images.pexels.com/photos/1961795/pexels-photo-1961795.jpeg?auto=compress&cs=tinysrgb&w=400',
+      category: 'fragrance',
+      description: 'Exotic vanilla orchid fragrance with warm undertones.',
+      stock: 18
+    },
+    {
+      id: 10,
+      name: 'Waterproof Mascara',
+      price: 55,
+      image: 'https://images.pexels.com/photos/3373714/pexels-photo-3373714.jpeg?auto=compress&cs=tinysrgb&w=400',
+      category: 'makeup',
+      description: 'Long-lasting waterproof mascara for dramatic lashes.',
+      stock: 45
+    },
+    {
+      id: 11,
+      name: 'Hyaluronic Acid Toner',
+      price: 95,
+      image: 'https://images.pexels.com/photos/3373736/pexels-photo-3373736.jpeg?auto=compress&cs=tinysrgb&w=400',
+      category: 'skincare',
+      description: 'Hydrating toner with hyaluronic acid and botanical extracts.',
+      stock: 38
+    },
+    {
+      id: 12,
+      name: 'Citrus Bloom Perfume',
+      price: 240,
+      image: 'https://images.pexels.com/photos/1961795/pexels-photo-1961795.jpeg?auto=compress&cs=tinysrgb&w=400',
+      category: 'fragrance',
+      description: 'Fresh citrus bloom fragrance with energizing notes.',
+      stock: 28
+    },
+    {
+      id: 13,
+      name: 'Contouring Palette',
+      price: 120,
+      image: 'https://images.pexels.com/photos/2533266/pexels-photo-2533266.jpeg?auto=compress&cs=tinysrgb&w=400',
+      category: 'makeup',
+      description: 'Professional contouring palette with 8 versatile shades.',
+      stock: 32
+    },
+    {
+      id: 14,
+      name: 'Retinol Night Serum',
+      price: 195,
+      image: 'https://images.pexels.com/photos/3373745/pexels-photo-3373745.jpeg?auto=compress&cs=tinysrgb&w=400',
+      category: 'skincare',
+      description: 'Powerful retinol serum for overnight skin renewal.',
+      stock: 16
+    },
+    {
+      id: 15,
+      name: 'Musk & Amber Perfume',
+      price: 350,
+      image: 'https://images.pexels.com/photos/1961795/pexels-photo-1961795.jpeg?auto=compress&cs=tinysrgb&w=400',
+      category: 'fragrance',
+      description: 'Sophisticated musk and amber fragrance for evening wear.',
+      stock: 12
+    },
+    {
+      id: 16,
+      name: 'Lip Gloss Set',
+      price: 85,
+      image: 'https://images.pexels.com/photos/3373714/pexels-photo-3373714.jpeg?auto=compress&cs=tinysrgb&w=400',
+      category: 'makeup',
+      description: 'Set of 6 glossy lip colors with mirror finish.',
+      stock: 42
     }
   ]);
   
@@ -155,18 +247,23 @@ function App() {
     return matchesSearch && matchesCategory;
   });
 
-  const addToCart = (product: Product) => {
+  const addToCart = (product: Product, quantity: number = 1) => {
     setCartItems(prev => {
       const existingItem = prev.find(item => item.id === product.id);
       if (existingItem) {
         return prev.map(item =>
           item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+      return [...prev, { ...product, quantity }];
     });
+  };
+
+  const handleProductClick = (product: Product) => {
+    setSelectedProduct(product);
+    setCurrentView('product');
   };
 
   const removeFromCart = (productId: number) => {
@@ -448,6 +545,7 @@ function App() {
                   key={product.id}
                   product={product}
                   onAddToCart={addToCart}
+                  onProductClick={handleProductClick}
                 />
               ))}
             </div>
@@ -484,6 +582,18 @@ function App() {
             adminSettings={adminSettings}
             onPlaceOrder={handlePlaceOrder}
             onCancel={() => setCurrentView('cart')}
+          />
+        )}
+
+        {currentView === 'product' && selectedProduct && (
+          <ProductDetail
+            product={selectedProduct}
+            language={language}
+            onAddToCart={(product, quantity) => {
+              addToCart(product, quantity);
+              alert(`${quantity} ${product.name} added to cart!`);
+            }}
+            onBack={() => setCurrentView('home')}
           />
         )}
 

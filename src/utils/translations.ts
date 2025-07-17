@@ -114,6 +114,12 @@ export const translations: Translations = {
   noProductsFound: { tr: 'Ürün bulunamadı', en: 'No products found' },
   noOrdersFound: { tr: 'Sipariş bulunamadı', en: 'No orders found' },
   
+  // Product Detail
+  backToProducts: { tr: 'Ürünlere Dön', en: 'Back to Products' },
+  quantity: { tr: 'Adet', en: 'Quantity' },
+  share: { tr: 'Paylaş', en: 'Share' },
+  productDetails: { tr: 'Ürün Detayları', en: 'Product Details' },
+  
   // Countries
   turkey: { tr: 'Türkiye', en: 'Turkey' },
   germany: { tr: 'Almanya', en: 'Germany' },

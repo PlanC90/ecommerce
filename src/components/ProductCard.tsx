@@ -5,13 +5,15 @@ import { Product } from '../types';
 interface ProductCardProps {
   product: Product;
   onAddToCart: (product: Product) => void;
+  onProductClick: (product: Product) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onProductClick }) => {
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group">
+    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group cursor-pointer">
       <div className="relative overflow-hidden">
         <img
+          onClick={() => onProductClick(product)}
           src={product.image}
           alt={product.name}
           className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
@@ -31,7 +33,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
         )}
       </div>
       
-      <div className="p-4">
+      <div className="p-4" onClick={() => onProductClick(product)}>
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-gray-500 capitalize">{product.category}</span>
           <div className="flex items-center space-x-1">
@@ -49,7 +51,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
             <span className="text-sm text-gray-500">MEMEXSOL</span>
           </div>
           <button
-            onClick={() => onAddToCart(product)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCart(product);
+            }}
             className="bg-gradient-to-r from-pink-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-pink-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 text-sm font-medium"
           >
             Add to Cart
