@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingCart, User, Search, Menu, X, Package, Settings, Home, Plus, Edit, Trash2, Wallet, Calendar, Truck, Globe } from 'lucide-react';
+import { ShoppingCart, User, Search, Menu, X, Package, Settings, Home, Plus, Edit, Trash2, Wallet, Calendar, Truck, Globe, Image } from 'lucide-react';
 import ProductCard from './components/ProductCard';
 import Cart from './components/Cart';
 import AdminPanel from './components/AdminPanel';
@@ -11,14 +11,16 @@ import OrderManagement from './components/OrderManagement';
 import AdminSettings from './components/AdminSettings';
 import LanguageSelector from './components/LanguageSelector';
 import ProductDetail from './components/ProductDetail';
-import ProfilePage from './components/ProfilePage';
 import { supabase } from './lib/supabase';
 import { Product, CartItem, Order, ShippingAddress, AdminSettings as AdminSettingsType, Language } from './types';
 import { translations } from './utils/translations';
+import { seedDemoOrders } from './utils/demoOrders';
+import AdminBannerSettings from './components/AdminBannerSettings';
+import ProfilePage from './components/ProfilePage';
 
 function App() {
   const [currentView, setCurrentView] = useState<'home' | 'cart' | 'checkout' | 'admin' | 'product' | 'profile'>('home');
-  const [adminView, setAdminView] = useState<'products' | 'orders' | 'settings'>('products');
+  const [adminView, setAdminView] = useState<'products' | 'orders' | 'settings' | 'banner'>('products');
   const [language, setLanguage] = useState<Language>('tr');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -189,6 +191,23 @@ function App() {
     loadAdminSettings();
     loadOrders();
   }, []);
+
+  useEffect(() => {
+    if (products.length > 0 && walletAddress) {
+      seedDemoOrders(5, walletAddress, products)
+        .then(newOrders => {
+          // Ensure newOrders is an array before updating the state
+          if (Array.isArray(newOrders)) {
+            setOrders(prevOrders => [...newOrders, ...prevOrders]);
+          } else {
+            console.error('generateDemoOrders did not return an array:', newOrders);
+          }
+        })
+        .catch(error => {
+          console.error('Error generating demo orders:', error);
+        });
+    }
+  }, [products, walletAddress]);
 
   const loadAdminSettings = async () => {
     try {
@@ -411,9 +430,14 @@ function App() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-                  LuxeCosmetics
+              <div className="flex items-center">
+                <img
+                  src="https://apricot-rational-booby-281.mypinata.cloud/ipfs/bafkreic3xn3bc43ziabhzdqjj3v5e6f7w6r2yl64fuezsz3frkowa2e3di"
+                  alt="Shop Memex Logo"
+                  className="h-8 w-auto"
+                />
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent ml-2">
+                  Shop Memex
                 </h1>
               </div>
             </div>
@@ -728,6 +752,17 @@ function App() {
                   <Settings size={16} />
                   <span>{t('settings')}</span>
                 </button>
+                 <button
+                  onClick={() => setAdminView('banner')}
+                  className={`flex-1 flex items-center justify-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    adminView === 'banner'
+                      ? 'bg-white text-pink-600 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  <Image size={16} />
+                  <span>Banner</span>
+                </button>
               </div>
             </div>
 
@@ -756,6 +791,9 @@ function App() {
                 language={language}
                 onUpdateSettings={updateAdminSettings}
               />
+            )}
+             {adminView === 'banner' && (
+              <AdminBannerSettings/>
             )}
           </div>
         )}

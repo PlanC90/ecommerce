@@ -176,9 +176,9 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ language }) => {
             {/* Main Heading */}
             <div className="space-y-6">
               <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold text-white leading-tight">
-                {currentSlideData.title}
+                {language === 'tr' ? bannerContent.title : bannerContent.title}
                 <span className="block bg-gradient-to-r from-yellow-300 via-pink-300 to-purple-300 bg-clip-text text-transparent animate-gradient">
-                  {currentSlideData.subtitle}
+                  {language === 'tr' ? bannerContent.subtitle : bannerContent.subtitle}
                 </span>
               </h1>
               <p className="text-xl sm:text-2xl text-pink-100 max-w-2xl leading-relaxed">
@@ -189,7 +189,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ language }) => {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
               <button className="group bg-white text-pink-600 px-10 py-5 rounded-2xl font-bold text-xl hover:bg-pink-50 transition-all duration-300 transform hover:scale-105 shadow-2xl flex items-center justify-center space-x-3">
-                <span>{bannerContent.buttonText}</span>
+                <span>{language === 'tr' ? bannerContent.buttonText : bannerContent.buttonText}</span>
                 <ArrowRight className="group-hover:translate-x-1 transition-transform" size={24} />
               </button>
               <button className="border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-xl hover:bg-white hover:text-pink-600 transition-all duration-300 backdrop-blur-sm flex items-center justify-center space-x-3">
@@ -221,7 +221,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ language }) => {
             <div className="relative z-10 group">
               <div className="relative overflow-hidden rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
                 <img
-                  src={currentSlideData.image}
+                  src={language === 'tr' ? bannerContent.imageUrl : bannerContent.imageUrl}
                   alt="Premium Cosmetics"
                   className="w-full h-96 sm:h-[600px] object-cover"
                 />
