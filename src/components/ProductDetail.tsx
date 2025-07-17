@@ -41,16 +41,29 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
     }
   };
 
-  const handleShare = () => {
+  const handleShare = async () => {
     if (navigator.share) {
-      navigator.share({
-        title: product.name,
-        text: product.description,
-        url: window.location.href,
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
+      try {
+        await navigator.share({
+          title: product.name,
+          text: product.description,
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+        // Fallback to clipboard if share fails (e.g., user cancels, permission denied)
+        if (navigator.clipboard) {
+          await navigator.clipboard.writeText(window.location.href);
+          alert('Product link copied to clipboard!');
+        } else {
+          alert('Sharing and clipboard copy not supported in this browser.');
+        }
+      }
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(window.location.href);
       alert('Product link copied to clipboard!');
+    } else {
+      alert('Sharing and clipboard copy not supported in this browser.');
     }
   };
 
