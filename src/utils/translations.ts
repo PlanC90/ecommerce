@@ -114,6 +114,33 @@ export const translations: Translations = {
   noProductsFound: { tr: 'Ürün bulunamadı', en: 'No products found' },
   noOrdersFound: { tr: 'Sipariş bulunamadı', en: 'No orders found' },
   
+  // Profile Page
+  myProfile: { tr: 'Profilim', en: 'My Profile' },
+  welcomeBack: { tr: 'Hoş Geldiniz', en: 'Welcome Back' },
+  myOrders: { tr: 'Siparişlerim', en: 'My Orders' },
+  favorites: { tr: 'Favorilerim', en: 'Favorites' },
+  settings: { tr: 'Ayarlar', en: 'Settings' },
+  noOrders: { tr: 'Henüz sipariş yok', en: 'No orders yet' },
+  noOrdersDesc: { tr: 'İlk siparişinizi vererek başlayın!', en: 'Start by placing your first order!' },
+  noFavorites: { tr: 'Henüz favori yok', en: 'No favorites yet' },
+  noFavoritesDesc: { tr: 'Beğendiğiniz ürünleri favorilere ekleyin!', en: 'Add products you like to favorites!' },
+  accountSettings: { tr: 'Hesap Ayarları', en: 'Account Settings' },
+  walletAddress: { tr: 'Cüzdan Adresi', en: 'Wallet Address' },
+  membershipStatus: { tr: 'Üyelik Durumu', en: 'Membership Status' },
+  totalOrders: { tr: 'Toplam Sipariş', en: 'Total Orders' },
+  viewDetails: { tr: 'Detayları Gör', en: 'View Details' },
+  trackingNumber: { tr: 'Takip Numarası', en: 'Tracking Number' },
+  moreItems: { tr: 'ürün daha', en: 'more items' },
+  items: { tr: 'ürün', en: 'items' },
+  orderPlaced: { tr: 'Sipariş Tarihi', en: 'Order Placed' },
+  backToHome: { tr: 'Ana Sayfaya Dön', en: 'Back to Home' },
+  phone: { tr: 'Telefon', en: 'Phone' },
+  email: { tr: 'E-posta', en: 'Email' },
+  orderItems: { tr: 'Sipariş Ürünleri', en: 'Order Items' },
+  
+  // Banner
+  watchVideo: { tr: 'Videoyu İzle', en: 'Watch Video' },
+  
   // Product Detail
   backToProducts: { tr: 'Ürünlere Dön', en: 'Back to Products' },
   quantity: { tr: 'Adet', en: 'Quantity' },

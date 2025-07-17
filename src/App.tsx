@@ -11,11 +11,13 @@ import OrderManagement from './components/OrderManagement';
 import AdminSettings from './components/AdminSettings';
 import LanguageSelector from './components/LanguageSelector';
 import ProductDetail from './components/ProductDetail';
+import ProfilePage from './components/ProfilePage';
+import { supabase } from './lib/supabase';
 import { Product, CartItem, Order, ShippingAddress, AdminSettings as AdminSettingsType, Language } from './types';
 import { translations } from './utils/translations';
 
 function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'cart' | 'checkout' | 'admin' | 'product'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'cart' | 'checkout' | 'admin' | 'product' | 'profile'>('home');
   const [adminView, setAdminView] = useState<'products' | 'orders' | 'settings'>('products');
   const [language, setLanguage] = useState<Language>('tr');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -182,56 +184,59 @@ function App() {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState('');
 
-  // Generate sample orders for demo
+  // Load data from Supabase
   useEffect(() => {
-    const sampleOrders: Order[] = [
-      {
-        id: 'ORD-001',
-        items: [
-          { ...products[0], quantity: 2 },
-          { ...products[1], quantity: 1 }
-        ],
-        shippingAddress: {
-          fullName: 'Ayşe Yılmaz',
-          email: 'ayse@example.com',
-          phone: '+90 555 123 4567',
-          address: 'Bağdat Caddesi No: 123 Daire: 5',
-          city: 'Istanbul',
-          postalCode: '34000',
-          country: 'Turkey'
-        },
-        subtotal: 345,
-        shippingCost: 25,
-        total: 370,
-        status: 'pending',
-        walletAddress: 'EXAMPLEphantomWallet1234567890',
-        createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000) // 2 hours ago
-      },
-      {
-        id: 'ORD-002',
-        items: [
-          { ...products[2], quantity: 1 },
-          { ...products[4], quantity: 1 }
-        ],
-        shippingAddress: {
-          fullName: 'Mehmet Demir',
-          email: 'mehmet@example.com',
-          phone: '+90 555 987 6543',
-          address: 'Istiklal Caddesi No: 456',
-          city: 'Ankara',
-          postalCode: '06000',
-          country: 'Turkey'
-        },
-        subtotal: 540,
-        shippingCost: 0,
-        total: 540,
-        status: 'shipped',
-        walletAddress: 'EXAMPLEphantomWallet0987654321',
-        createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000) // 1 day ago
-      }
-    ];
-    setOrders(sampleOrders);
+    loadAdminSettings();
+    loadOrders();
   }, []);
+
+  const loadAdminSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('admin_settings')
+        .select('*')
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+
+      if (data) {
+        setAdminSettings({
+          shippingCost: data.shipping_cost,
+          freeShippingThreshold: data.free_shipping_threshold
+        });
+      }
+    } catch (error) {
+      console.error('Error loading admin settings:', error);
+    }
+  };
+
+  const loadOrders = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const formattedOrders: Order[] = data.map(order => ({
+        id: order.id,
+        items: order.items,
+        shippingAddress: order.shipping_address,
+        subtotal: order.subtotal,
+        shippingCost: order.shipping_cost,
+        total: order.total,
+        status: order.status,
+        walletAddress: order.user_wallet,
+        createdAt: new Date(order.created_at),
+        trackingNumber: order.tracking_number
+      }));
+
+      setOrders(formattedOrders);
+    } catch (error) {
+      console.error('Error loading orders:', error);
+    }
+  };
 
   const categories = [
     { id: 'all', name: t('allProducts') },
@@ -311,7 +316,7 @@ function App() {
     return false;
   };
 
-  const handlePlaceOrder = (shippingAddress: ShippingAddress, total: number) => {
+  const handlePlaceOrder = async (shippingAddress: ShippingAddress, total: number) => {
     const newOrder: Order = {
       id: `ORD-${Date.now().toString().slice(-6)}`,
       items: [...cartItems],
@@ -324,19 +329,70 @@ function App() {
       createdAt: new Date()
     };
 
-    setOrders(prev => [newOrder, ...prev]);
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .insert({
+          id: newOrder.id,
+          user_wallet: walletAddress,
+          items: newOrder.items,
+          shipping_address: shippingAddress,
+          subtotal: newOrder.subtotal,
+          shipping_cost: newOrder.shippingCost,
+          total: newOrder.total,
+          status: 'pending'
+        });
+
+      if (error) throw error;
+
+      setOrders(prev => [newOrder, ...prev]);
+    } catch (error) {
+      console.error('Error saving order:', error);
+      alert('Error placing order. Please try again.');
+      return;
+    }
+
     setCartItems([]);
     setCurrentView('home');
     
     alert(`Order placed successfully! Order ID: ${newOrder.id}`);
   };
 
-  const updateOrderStatus = (orderId: string, status: Order['status']) => {
-    setOrders(prev =>
-      prev.map(order =>
-        order.id === orderId ? { ...order, status } : order
-      )
-    );
+  const updateOrderStatus = async (orderId: string, status: Order['status']) => {
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .update({ status })
+        .eq('id', orderId);
+
+      if (error) throw error;
+
+      setOrders(prev =>
+        prev.map(order =>
+          order.id === orderId ? { ...order, status } : order
+        )
+      );
+    } catch (error) {
+      console.error('Error updating order status:', error);
+    }
+  };
+
+  const updateAdminSettings = async (newSettings: AdminSettingsType) => {
+    try {
+      const { error } = await supabase
+        .from('admin_settings')
+        .upsert({
+          id: '1',
+          shipping_cost: newSettings.shippingCost,
+          free_shipping_threshold: newSettings.freeShippingThreshold
+        });
+
+      if (error) throw error;
+
+      setAdminSettings(newSettings);
+    } catch (error) {
+      console.error('Error updating admin settings:', error);
+    }
   };
 
   const cartTotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -419,6 +475,19 @@ function App() {
                 onConnect={setIsWalletConnected}
                 onAddressChange={setWalletAddress}
               />
+              {isWalletConnected && (
+                <button
+                  onClick={() => setCurrentView('profile')}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    currentView === 'profile'
+                      ? 'text-pink-600 bg-pink-50'
+                      : 'text-gray-700 hover:text-pink-600 hover:bg-pink-50'
+                  }`}
+                >
+                  <User size={16} />
+                  <span>{t('myProfile')}</span>
+                </button>
+              )}
             </div>
 
             {/* Mobile menu button */}
@@ -494,6 +563,22 @@ function App() {
                   onConnect={setIsWalletConnected}
                   onAddressChange={setWalletAddress}
                 />
+                {isWalletConnected && (
+                  <button
+                    onClick={() => {
+                      setCurrentView('profile');
+                      setIsMenuOpen(false);
+                    }}
+                    className={`flex items-center space-x-2 w-full px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                      currentView === 'profile'
+                        ? 'text-pink-600 bg-pink-50'
+                        : 'text-gray-700 hover:text-pink-600 hover:bg-pink-50'
+                    }`}
+                  >
+                    <User size={16} />
+                    <span>{t('myProfile')}</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -585,6 +670,14 @@ function App() {
           />
         )}
 
+        {currentView === 'profile' && isWalletConnected && (
+          <ProfilePage
+            walletAddress={walletAddress}
+            language={language}
+            onBack={() => setCurrentView('home')}
+          />
+        )}
+
         {currentView === 'product' && selectedProduct && (
           <ProductDetail
             product={selectedProduct}
@@ -661,7 +754,7 @@ function App() {
               <AdminSettings
                 settings={adminSettings}
                 language={language}
-                onUpdateSettings={setAdminSettings}
+                onUpdateSettings={updateAdminSettings}
               />
             )}
           </div>
