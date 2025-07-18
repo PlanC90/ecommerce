@@ -10,7 +10,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onProductClick }) => {
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group cursor-pointer">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer">
       <div className="relative overflow-hidden">
         <img
           onClick={() => onProductClick(product)}
@@ -21,7 +21,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onProdu
         <div className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <button
             onClick={() => onAddToCart(product)}
-            className="text-pink-600 hover:text-pink-700 transition-colors"
+            className="text-pink-600 hover:text-pink-700 dark:text-pink-400 transition-colors"
           >
             <ShoppingCart size={20} />
           </button>
@@ -35,20 +35,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onProdu
       
       <div className="p-4" onClick={() => onProductClick(product)}>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-500 capitalize">{product.category}</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400 capitalize">{product.category}</span>
           <div className="flex items-center space-x-1">
             <Star className="text-yellow-400 fill-current" size={16} />
             <span className="text-sm text-gray-600">4.8</span>
           </div>
         </div>
         
-        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-1">{product.name}</h3>
-        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.description}</p>
+        <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-1">{product.name}</h3>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">{product.description}</p>
         
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="text-xl font-bold text-pink-600">{product.price}</span>
-            <span className="text-sm text-gray-500">MEMEXSOL</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">MEMEXSOL</span>
           </div>
           <button
             onClick={(e) => {
@@ -61,7 +61,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onProdu
           </button>
         </div>
         
-        <div className="mt-2 text-xs text-gray-500">
+        <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
           {product.stock} in stock
         </div>
       </div>

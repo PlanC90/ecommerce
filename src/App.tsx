@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingCart, User, Search, Menu, X, Package, Settings, Home, Plus, Edit, Trash2, Wallet, Calendar, Truck, Globe, Image } from 'lucide-react';
+import ThemeToggle from './components/ThemeToggle';
 import ProductCard from './components/ProductCard';
 import Cart from './components/Cart';
 import AdminPanel from './components/AdminPanel';
@@ -17,6 +18,7 @@ import { translations } from './utils/translations';
 import { seedDemoOrders } from './utils/demoOrders';
 import AdminBannerSettings from './components/AdminBannerSettings';
 import ProfilePage from './components/ProfilePage';
+import Footer from './components/Footer';
 
 function App() {
   const [currentView, setCurrentView] = useState<'home' | 'cart' | 'checkout' | 'admin' | 'product' | 'profile'>('home');
@@ -423,9 +425,9 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
       {/* Header */}
-      <header className="bg-white shadow-lg sticky top-0 z-50">
+      <header className="bg-white dark:bg-gray-900 shadow-lg sticky top-0 z-50 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -449,7 +451,7 @@ function App() {
                 className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   currentView === 'home'
                     ? 'text-pink-600 bg-pink-50'
-                    : 'text-gray-700 hover:text-pink-600 hover:bg-pink-50'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-gray-800'
                 }`}
               >
                 <Home size={16} />
@@ -460,7 +462,7 @@ function App() {
                 className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors relative ${
                   currentView === 'cart'
                     ? 'text-pink-600 bg-pink-50'
-                    : 'text-gray-700 hover:text-pink-600 hover:bg-pink-50'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-gray-800'
                 }`}
               >
                 <ShoppingCart size={16} />
@@ -479,7 +481,7 @@ function App() {
                 className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   currentView === 'admin'
                     ? 'text-pink-600 bg-pink-50'
-                    : 'text-gray-700 hover:text-pink-600 hover:bg-pink-50'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-gray-800'
                 }`}
               >
                 <Settings size={16} />
@@ -489,6 +491,7 @@ function App() {
 
             {/* Right Side - Language & Wallet */}
             <div className="hidden md:flex items-center space-x-4">
+              <ThemeToggle />
               <LanguageSelector 
                 currentLanguage={language}
                 onLanguageChange={setLanguage}
@@ -505,7 +508,7 @@ function App() {
                   className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     currentView === 'profile'
                       ? 'text-pink-600 bg-pink-50'
-                      : 'text-gray-700 hover:text-pink-600 hover:bg-pink-50'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-gray-800'
                   }`}
                 >
                   <User size={16} />
@@ -517,7 +520,7 @@ function App() {
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 rounded-md text-gray-700 hover:text-pink-600 hover:bg-pink-50"
+             className="md:hidden p-2 rounded-md text-gray-700 dark:text-gray-300 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-gray-800"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -527,7 +530,7 @@ function App() {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-900 border-t dark:border-gray-700">
               <button
                 onClick={() => {
                   setCurrentView('home');
@@ -536,7 +539,7 @@ function App() {
                 className={`flex items-center space-x-2 w-full px-3 py-2 rounded-md text-base font-medium transition-colors ${
                   currentView === 'home'
                     ? 'text-pink-600 bg-pink-50'
-                    : 'text-gray-700 hover:text-pink-600 hover:bg-pink-50'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-gray-800'
                 }`}
               >
                 <Home size={16} />
@@ -550,7 +553,7 @@ function App() {
                 className={`flex items-center space-x-2 w-full px-3 py-2 rounded-md text-base font-medium transition-colors relative ${
                   currentView === 'cart'
                     ? 'text-pink-600 bg-pink-50'
-                    : 'text-gray-700 hover:text-pink-600 hover:bg-pink-50'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-gray-800'
                 }`}
               >
                 <ShoppingCart size={16} />
@@ -570,7 +573,7 @@ function App() {
                 className={`flex items-center space-x-2 w-full px-3 py-2 rounded-md text-base font-medium transition-colors ${
                   currentView === 'admin'
                     ? 'text-pink-600 bg-pink-50'
-                    : 'text-gray-700 hover:text-pink-600 hover:bg-pink-50'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-gray-800'
                 }`}
               >
                 <Settings size={16} />
@@ -596,7 +599,7 @@ function App() {
                     className={`flex items-center space-x-2 w-full px-3 py-2 rounded-md text-base font-medium transition-colors ${
                       currentView === 'profile'
                         ? 'text-pink-600 bg-pink-50'
-                        : 'text-gray-700 hover:text-pink-600 hover:bg-pink-50'
+                        : 'text-gray-700 dark:text-gray-300 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-gray-800'
                     }`}
                   >
                     <User size={16} />
@@ -798,6 +801,9 @@ function App() {
           </div>
         )}
       </main>
+
+      {/* Footer */}
+      <Footer language={language} />
     </div>
   );
 }

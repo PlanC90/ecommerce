@@ -38,22 +38,22 @@ const Cart: React.FC<CartProps> = ({
   if (items.length === 0) {
     return (
       <div className="text-center py-12">
-        <ShoppingBag className="mx-auto text-gray-400 mb-4" size={64} />
-        <h3 className="text-2xl font-semibold text-gray-900 mb-2">Your cart is empty</h3>
-        <p className="text-gray-600">Add some beautiful products to get started!</p>
+        <ShoppingBag className="mx-auto text-gray-400 dark:text-gray-500 mb-4" size={64} />
+        <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Your cart is empty</h3>
+        <p className="text-gray-600 dark:text-gray-300">Add some beautiful products to get started!</p>
       </div>
     );
   }
 
   return (
     <div className="max-w-4xl mx-auto">
-      <h2 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h2>
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Shopping Cart</h2>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
           {items.map(item => (
-            <div key={item.id} className="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition-shadow">
+            <div key={item.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 hover:shadow-lg transition-all duration-300">
               <div className="flex items-center space-x-4">
                 <img
                   src={item.image}
@@ -62,25 +62,25 @@ const Cart: React.FC<CartProps> = ({
                 />
                 
                 <div className="flex-1">
-                  <h4 className="font-semibold text-gray-900">{item.name}</h4>
-                  <p className="text-sm text-gray-600 capitalize">{item.category}</p>
+                  <h4 className="font-semibold text-gray-900 dark:text-white">{item.name}</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 capitalize">{item.category}</p>
                   <div className="flex items-center space-x-2 mt-1">
                     <span className="text-lg font-bold text-pink-600">{item.price}</span>
-                    <span className="text-sm text-gray-500">MEMEXSOL</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">MEMEXSOL</span>
                   </div>
                 </div>
                 
                 <div className="flex items-center space-x-3">
                   <button
                     onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
-                    className="p-1 rounded-full hover:bg-gray-100 transition-colors"
+                    className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   >
                     <Minus size={16} />
                   </button>
                   <span className="w-8 text-center font-medium">{item.quantity}</span>
                   <button
                     onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                    className="p-1 rounded-full hover:bg-gray-100 transition-colors"
+                    className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                   >
                     <Plus size={16} />
                   </button>
@@ -88,7 +88,7 @@ const Cart: React.FC<CartProps> = ({
                 
                 <button
                   onClick={() => onRemoveItem(item.id)}
-                  className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                  className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-full transition-colors"
                 >
                   <Trash2 size={16} />
                 </button>
@@ -98,16 +98,16 @@ const Cart: React.FC<CartProps> = ({
         </div>
         
         {/* Order Summary */}
-        <div className="bg-white rounded-xl shadow-md p-6 h-fit">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Order Summary</h3>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 h-fit">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Order Summary</h3>
           
           <div className="space-y-3 mb-4">
             <div className="flex justify-between">
-              <span className="text-gray-600">Subtotal</span>
+              <span className="text-gray-600 dark:text-gray-300">Subtotal</span>
               <span className="font-medium">{total} MEMEXSOL</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Shipping</span>
+              <span className="text-gray-600 dark:text-gray-300">Shipping</span>
               <span className="font-medium">{shippingCost === 0 ? 'Free' : `${shippingCost} MEMEXSOL`}</span>
             </div>
             {total >= adminSettings.freeShippingThreshold && (
@@ -117,17 +117,17 @@ const Cart: React.FC<CartProps> = ({
             )}
             <div className="border-t pt-3">
               <div className="flex justify-between">
-                <span className="text-lg font-semibold">Total</span>
+                <span className="text-lg font-semibold dark:text-white">Total</span>
                 <span className="text-lg font-bold text-pink-600">{finalTotal} MEMEXSOL</span>
               </div>
             </div>
           </div>
           
           {/* Wallet Status */}
-          <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+          <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
             <div className="flex items-center space-x-2 mb-2">
-              <Wallet size={16} className="text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">Phantom Wallet</span>
+              <Wallet size={16} className="text-gray-600 dark:text-gray-300" />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-200">Phantom Wallet</span>
             </div>
             {isWalletConnected ? (
               <div className="text-xs text-green-600">
@@ -153,7 +153,7 @@ const Cart: React.FC<CartProps> = ({
           </button>
           
           <div className="mt-4 text-center">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               Secure payment powered by Phantom Wallet
             </p>
           </div>

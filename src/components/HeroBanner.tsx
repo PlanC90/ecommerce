@@ -71,7 +71,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ language }) => {
       const { data, error } = await supabase
         .from('hero_banner_content')
         .select('*')
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
 
@@ -101,7 +101,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ language }) => {
   const currentSlideData = heroSlides[currentSlide];
 
   return (
-    <div className={`relative bg-gradient-to-br ${currentSlideData.gradient} overflow-hidden min-h-screen`}>
+    <div className={`relative bg-gradient-to-br ${currentSlideData.gradient} dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 overflow-hidden transition-colors duration-300`}>
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         {/* Floating Particles */}
@@ -163,53 +163,53 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ language }) => {
         ))}
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[80vh]">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[50vh]">
           {/* Content */}
           <div className="text-center lg:text-left space-y-8">
             {/* Badge */}
-            <div className="inline-flex items-center px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm rounded-full text-white text-sm font-medium shadow-lg">
+            <div className="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 backdrop-blur-sm rounded-full text-white text-xs font-medium shadow-lg">
               <Shield className="mr-2" size={16} />
               Premium Quality Guaranteed
             </div>
 
             {/* Main Heading */}
-            <div className="space-y-6">
-              <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold text-white leading-tight">
+            <div className="space-y-4">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
                 {language === 'tr' ? bannerContent.title : bannerContent.title}
                 <span className="block bg-gradient-to-r from-yellow-300 via-pink-300 to-purple-300 bg-clip-text text-transparent animate-gradient">
                   {language === 'tr' ? bannerContent.subtitle : bannerContent.subtitle}
                 </span>
               </h1>
-              <p className="text-xl sm:text-2xl text-pink-100 max-w-2xl leading-relaxed">
+              <p className="text-lg sm:text-xl text-pink-100 max-w-2xl leading-relaxed">
                 {currentSlideData.description}
               </p>
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start">
-              <button className="group bg-white text-pink-600 px-10 py-5 rounded-2xl font-bold text-xl hover:bg-pink-50 transition-all duration-300 transform hover:scale-105 shadow-2xl flex items-center justify-center space-x-3">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <button className="group bg-white text-pink-600 px-8 py-3 rounded-xl font-bold text-lg hover:bg-pink-50 transition-all duration-300 transform hover:scale-105 shadow-2xl flex items-center justify-center space-x-3">
                 <span>{language === 'tr' ? bannerContent.buttonText : bannerContent.buttonText}</span>
-                <ArrowRight className="group-hover:translate-x-1 transition-transform" size={24} />
+                <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
               </button>
-              <button className="border-2 border-white text-white px-10 py-5 rounded-2xl font-bold text-xl hover:bg-white hover:text-pink-600 transition-all duration-300 backdrop-blur-sm flex items-center justify-center space-x-3">
-                <Play size={20} />
+              <button className="border-2 border-white text-white px-8 py-3 rounded-xl font-bold text-lg hover:bg-white hover:text-pink-600 transition-all duration-300 backdrop-blur-sm flex items-center justify-center space-x-3">
+                <Play size={18} />
                 <span>{t('watchVideo')}</span>
               </button>
             </div>
 
             {/* Trust Indicators */}
-            <div className="flex flex-wrap gap-8 justify-center lg:justify-start pt-6">
+            <div className="flex flex-wrap gap-6 justify-center lg:justify-start pt-4">
               <div className="flex items-center space-x-3 text-pink-100">
-                <Truck size={24} />
+                <Truck size={20} />
                 <span className="font-medium">{t('freeShipping')}</span>
               </div>
               <div className="flex items-center space-x-3 text-pink-100">
-                <Shield size={24} />
+                <Shield size={20} />
                 <span className="font-medium">Secure Payment</span>
               </div>
               <div className="flex items-center space-x-3 text-pink-100">
-                <Award size={24} />
+                <Award size={20} />
                 <span className="font-medium">Premium Quality</span>
               </div>
             </div>
@@ -223,88 +223,17 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ language }) => {
                 <img
                   src={language === 'tr' ? bannerContent.imageUrl : bannerContent.imageUrl}
                   alt="Premium Cosmetics"
-                  className="w-full h-96 sm:h-[600px] object-cover"
+                  className="w-full h-64 sm:h-80 object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
                 
                 {/* Video Play Button Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <button className="w-20 h-20 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-opacity-30 transition-all duration-300 transform hover:scale-110">
-                    <Play size={32} className="ml-1" />
+                  <button className="w-16 h-16 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-opacity-30 transition-all duration-300 transform hover:scale-110">
+                    <Play size={24} className="ml-1" />
                   </button>
                 </div>
               </div>
-            </div>
-
-            {/* Floating Product Cards */}
-            <div className="absolute -top-8 -right-8 bg-white rounded-2xl p-6 shadow-xl animate-float z-20 backdrop-blur-sm bg-opacity-95">
-              <div className="flex items-center space-x-4">
-                <img
-                  src="https://images.pexels.com/photos/2533266/pexels-photo-2533266.jpeg?auto=compress&cs=tinysrgb&w=100"
-                  alt="Product"
-                  className="w-16 h-16 object-cover rounded-xl"
-                />
-                <div>
-                  <p className="font-semibold text-gray-900">Luxury Serum</p>
-                  <p className="text-pink-600 font-bold">150 MEMEXSOL</p>
-                  <div className="flex items-center mt-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="text-yellow-400 fill-current" size={12} />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="absolute -bottom-8 -left-8 bg-white rounded-2xl p-6 shadow-xl animate-float delay-500 z-20 backdrop-blur-sm bg-opacity-95">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-pink-600 mb-1">4.9★</div>
-                <div className="text-sm text-gray-600">Customer Rating</div>
-                <div className="text-xs text-gray-500 mt-1">15,000+ Reviews</div>
-              </div>
-            </div>
-
-            {/* Discount Badge */}
-            <div className="absolute top-4 left-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-8 py-4 rounded-2xl font-bold shadow-lg animate-bounce z-20">
-              <div className="text-2xl">50% OFF</div>
-              <div className="text-sm">Limited Time</div>
-            </div>
-
-            {/* New Badge */}
-            <div className="absolute top-4 right-4 bg-gradient-to-r from-green-400 to-blue-500 text-white px-6 py-3 rounded-2xl font-bold shadow-lg z-20">
-              <div className="text-sm">NEW</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Enhanced Stats Section */}
-      <div className="relative bg-white bg-opacity-10 backdrop-blur-md border-t border-white border-opacity-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center group hover:scale-105 transition-transform duration-300">
-              <div className="text-5xl sm:text-6xl font-bold text-white mb-3 group-hover:text-yellow-300 transition-colors">
-                25K+
-              </div>
-              <div className="text-pink-100 font-medium text-lg">{t('happyCustomers')}</div>
-            </div>
-            <div className="text-center group hover:scale-105 transition-transform duration-300">
-              <div className="text-5xl sm:text-6xl font-bold text-white mb-3 group-hover:text-yellow-300 transition-colors">
-                1200+
-              </div>
-              <div className="text-pink-100 font-medium text-lg">{t('premiumProducts')}</div>
-            </div>
-            <div className="text-center group hover:scale-105 transition-transform duration-300">
-              <div className="text-5xl sm:text-6xl font-bold text-white mb-3 group-hover:text-yellow-300 transition-colors">
-                24/7
-              </div>
-              <div className="text-pink-100 font-medium text-lg">{t('customerSupport')}</div>
-            </div>
-            <div className="text-center group hover:scale-105 transition-transform duration-300">
-              <div className="text-5xl sm:text-6xl font-bold text-white mb-3 group-hover:text-yellow-300 transition-colors">
-                99.8%
-              </div>
-              <div className="text-pink-100 font-medium text-lg">{t('satisfactionRate')}</div>
             </div>
           </div>
         </div>
